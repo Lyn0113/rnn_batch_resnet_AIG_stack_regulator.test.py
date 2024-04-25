@@ -3,7 +3,6 @@ import tensorflow as tf
 from keras.callbacks import EarlyStopping
 from keras.layers import Activation
 from keras.initializers import GlorotUniform
-
 from utils import generate_add, compute_accuracy, generate_same, generate_convert, generate_binary_and, \
     generate_binary_or, generate_binary_not, generate_binary_xor
 
@@ -112,7 +111,7 @@ class FeedForward(keras.Model):
         # ic_outputa, ic_outputb = tf.split(ic_output3, 2, axis=-1)
         # lut_output3 = lut_operation(lut_num3, ic_outputa)
 
-        softmax_weights4 = tf.nn.softmax(self.wic4, axis=-1)
+        softmax_weights4 = self.wic4
         ones = tf.expand_dims(tf.ones([tf.shape(lut_output1)[0]], dtype=inputs.dtype), -1)
         combined_inputs4 = tf.concat([ic_outputb, lut_output1, 1 - lut_output1, ones], axis=-1)
         ic_output4 = tf.matmul(combined_inputs4, tf.transpose(softmax_weights4))
@@ -120,13 +119,13 @@ class FeedForward(keras.Model):
         return ic_output4
 
 
-num_epochs = 200
+num_epochs = 20
 batch_size = 32
 # 创建FeedForward层的实例，神经元个数为units
 model = FeedForward(units=256)
 
 # Generate data using the modified function
-x_train, y_train, x_val, y_val, x_test, y_test = generate_binary_xor(4, batch_size * 3000)
+x_train, y_train, x_val, y_val, x_test, y_test = generate_binary_xor(output_num, batch_size * 3000)
 # inputs,outputs=generate_binary_and(8,batch_size*1000)
 # inputs = tf.convert_to_tensor(inputs, dtype=tf.float32)
 # outputs = tf.convert_to_tensor(outputs, dtype=tf.float32)
@@ -140,6 +139,7 @@ model.compile(optimizer='adam', loss='mse')
 early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, min_delta=0.0001)
 model.fit(x_train, y_train, epochs=num_epochs, batch_size=batch_size, callbacks=[early_stopping])
 
+print("Weights wic:", model.wic4.numpy())
 # 进行预测
 predictions = model.predict(x_test)
 accuracy = compute_accuracy(predictions, y_test)

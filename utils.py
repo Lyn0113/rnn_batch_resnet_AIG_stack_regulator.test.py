@@ -177,8 +177,8 @@ def generate_binary_xor(binary_dimension,total_samples):
     inputs=[]
     outputs=[]
     for _ in range (total_samples):
-        left=np.random.randint(0,16)
-        right=np.random.randint(0,16)
+        left=np.random.randint(0,2**binary_dimension)
+        right=np.random.randint(0,2**binary_dimension)
         # 将数字转换为二进制数组
         binary_left = int_to_binary(left)
         binary_right = int_to_binary(right)
@@ -250,7 +250,7 @@ def compute_accuracy(output, y_test):
     y_test = y_test.numpy()
 
     # 四舍五入输出
-    output = (output > 0.7).astype(int)
+    output = (output > 0.5).astype(int)
 
     # 计算准确率
     correct = (output == y_test).sum().item()
