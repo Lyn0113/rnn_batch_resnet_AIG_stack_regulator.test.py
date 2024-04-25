@@ -142,7 +142,6 @@ model.fit(x_train, y_train, epochs=num_epochs, batch_size=batch_size, callbacks=
 
 print("Weights wic:", tf.nn.softmax(model.wic.numpy()))
 print("Weights wic:", model.wic.numpy())
-print(1)
 # 进行预测
 predictions = model.predict(x_test)
 accuracy = compute_accuracy(predictions, y_test)
