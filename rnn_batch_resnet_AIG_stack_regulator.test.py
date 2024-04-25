@@ -139,7 +139,10 @@ model.compile(optimizer='adam', loss='mse')
 early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, min_delta=0.0001)
 model.fit(x_train, y_train, epochs=num_epochs, batch_size=batch_size, callbacks=[early_stopping])
 
-print("Weights wic:", model.wic4.numpy())
+
+print("Weights wic:", tf.nn.softmax(model.wic.numpy()))
+print("Weights wic:", model.wic.numpy())
+
 # 进行预测
 predictions = model.predict(x_test)
 accuracy = compute_accuracy(predictions, y_test)
